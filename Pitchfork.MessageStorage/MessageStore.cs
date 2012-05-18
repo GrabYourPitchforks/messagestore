@@ -37,6 +37,12 @@ namespace Pitchfork.MessageStorage
             }
         }
 
+        // only for testing purposes
+        public ulong GetMessageCount()
+        {
+            return (ulong)Volatile.Read(ref _nextFreeMessageId);
+        }
+
         // Adds a message to the store. Returns the ID of the newly added message.
         public ulong Add(T message)
         {
@@ -93,7 +99,7 @@ namespace Pitchfork.MessageStorage
             int idxIntoFragmentsArray, idxIntoFragment;
             GetFragmentOffsets(firstMessageIdRequestedByClient, out fragmentNum, out idxIntoFragmentsArray, out idxIntoFragment);
             Fragment thisFragment = _fragments[idxIntoFragmentsArray];
-            ulong firstMessageIdInThisFragment = GetMessageId(fragmentNum, 0);
+            ulong firstMessageIdInThisFragment = GetMessageId(thisFragment.FragmentNum, 0);
             ulong firstMessageIdInNextFragment = firstMessageIdInThisFragment + _fragmentSize;
 
             // Case 2:
